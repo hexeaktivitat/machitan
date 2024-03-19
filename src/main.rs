@@ -1,5 +1,7 @@
 use bevy::prelude::*;
 
+use machitan::*;
+
 fn main() {
-    App::new().run();
+    App::new().add_system(Update, hello_world).run();
 }
