@@ -4,8 +4,7 @@ use machitan::*;
 
 fn main() {
     App::new()
-        .add_plugins(DefaultPlugins)
-        .add_systems(Startup, add_people)
-        .add_systems(Update, (hello_world, (update_people, greet_people).chain()))
+        .insert_resource(GreetTimer(Timer::from_seconds(2.0, TimerMode::Repeating)))
+        .add_plugins((DefaultPlugins, HelloPlugin))
         .run();
 }

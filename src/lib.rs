@@ -6,6 +6,18 @@ pub struct Person;
 #[derive(Component)]
 pub struct Name(String);
 
+#[derive(Resource)]
+pub struct GreetTimer(pub Timer);
+
+pub struct HelloPlugin;
+
+impl Plugin for HelloPlugin {
+    fn build(&self, app: &mut App) {
+        app.add_systems(Startup, add_people)
+            .add_systems(Update, (update_people, greet_people).chain());
+    }
+}
+
 pub fn hello_world() {
     println!("hello, world");
 }
@@ -16,9 +28,15 @@ pub fn add_people(mut commands: Commands) {
     commands.spawn((Person, Name("Tokai Teio".into())));
 }
 
-pub fn greet_people(query: Query<&Name, With<Person>>) {
-    for name in &query {
-        println!("hello {}", name.0);
+pub fn greet_people(
+    time: Res<Time>,
+    mut timer: ResMut<GreetTimer>,
+    query: Query<&Name, With<Person>>,
+) {
+    if timer.0.tick(time.delta()).just_finished() {
+        for name in &query {
+            println!("hello {}", name.0);
+        }
     }
 }
 
