@@ -1,5 +1,7 @@
 use bevy::prelude::*;
 
+pub mod player;
+
 #[derive(Component)]
 struct Person;
 
