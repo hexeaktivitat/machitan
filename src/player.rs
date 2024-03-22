@@ -1,4 +1,4 @@
-use bevy::{ecs::event, input::keyboard::KeyCode, prelude::*};
+use bevy::{input::keyboard::KeyCode, prelude::*};
 
 pub struct PlayerPlugin;
 
@@ -85,6 +85,12 @@ fn player_input(
             }
             if key == &KeyCode::Semicolon {
                 ev_play_mun.send(EventMunId(8));
+            }
+            if key == &KeyCode::Space {
+                ev_play_mun.send(EventMunId(9));
+            }
+            if key == &KeyCode::Enter {
+                ev_play_mun.send(EventMunId(0));
             }
         }
     }

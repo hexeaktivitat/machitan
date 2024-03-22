@@ -1,14 +1,15 @@
 use bevy::{prelude::*, window::close_on_esc};
+use bevy_console::ConsolePlugin;
 
-use machitan::{player::PlayerPlugin, GreetTimer};
+use machitan::MachitanPlugin;
 
 fn main() {
     App::new()
-        .insert_resource(GreetTimer(Timer::from_seconds(2.0, TimerMode::Repeating)))
         .add_plugins((
             DefaultPlugins,
             // AssetLoadPlugin,
-            PlayerPlugin,
+            ConsolePlugin,
+            MachitanPlugin,
             ViewportPlugin,
         ))
         .add_systems(Update, (close_on_esc))
