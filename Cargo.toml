@@ -8,6 +8,7 @@ edition = "2021"
 [dependencies]
 bevy = { version = "0.13.1", features = ["dynamic_linking"]}
 bevy_console = "0.11.1"
+clap = "4.5.3"
 
 # small optimizations in debug builds
 [profile.dev]

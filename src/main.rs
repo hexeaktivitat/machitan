@@ -1,5 +1,4 @@
 use bevy::{prelude::*, window::close_on_esc};
-use bevy_console::ConsolePlugin;
 
 use machitan::MachitanPlugin;
 
@@ -8,7 +7,6 @@ fn main() {
         .add_plugins((
             DefaultPlugins,
             // AssetLoadPlugin,
-            ConsolePlugin,
             MachitanPlugin,
             ViewportPlugin,
         ))
