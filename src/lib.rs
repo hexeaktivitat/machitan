@@ -10,10 +10,20 @@ pub struct MachitanPlugin;
 
 impl Plugin for MachitanPlugin {
     fn build(&self, app: &mut App) {
-        app.add_plugins((PlayerPlugin, ConsolePlugin))
-            .add_console_command::<HelpCommand, _>(help_command);
+        // state setup
+        app.insert_state(ApplicationState::InGame)
+            .init_state::<ModeState>()
+            .init_state::<PauseState>();
+
+        // plugins
+        app.add_plugins((PlayerPlugin, ConsolePlugin));
+
+        // console comands
+        app.add_console_command::<HelpCommand, _>(help_command);
     }
 }
+
+// console commands
 
 #[derive(Parser, ConsoleCommand)]
 #[command(name = "echo")]
@@ -25,4 +35,27 @@ fn help_command(mut log: ConsoleCommand<HelpCommand>) {
     if let Some(Ok(HelpCommand { msg })) = log.take() {
         log.reply(msg);
     }
+}
+
+// game states
+
+#[derive(States, Debug, Clone, PartialEq, Eq, Hash)]
+pub enum ApplicationState {
+    Loading,
+    Menu,
+    InGame,
+}
+
+#[derive(States, Debug, Default, Clone, PartialEq, Eq, Hash)]
+pub enum ModeState {
+    NotInGame,
+    #[default]
+    Singleplayer,
+}
+
+#[derive(States, Debug, Default, Clone, PartialEq, Eq, Hash)]
+pub enum PauseState {
+    #[default]
+    Unpaused,
+    Paused,
 }
