@@ -4,6 +4,7 @@ use clap::Parser;
 
 use player::PlayerPlugin;
 
+mod note;
 mod player;
 
 pub struct MachitanPlugin;
