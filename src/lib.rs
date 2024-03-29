@@ -2,6 +2,7 @@ use bevy::prelude::*;
 use bevy_console::{AddConsoleCommand, ConsoleCommand, ConsolePlugin};
 use clap::Parser;
 
+use note::NotePlugin;
 use player::PlayerPlugin;
 
 mod note;
@@ -17,7 +18,7 @@ impl Plugin for MachitanPlugin {
             .init_state::<PauseState>();
 
         // plugins
-        app.add_plugins((PlayerPlugin, ConsolePlugin));
+        app.add_plugins((PlayerPlugin, ConsolePlugin, NotePlugin));
 
         // console comands
         app.add_console_command::<HelpCommand, _>(help_command);
