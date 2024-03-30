@@ -1,4 +1,4 @@
-use bevy::prelude::*;
+use bevy::{prelude::*, time::Stopwatch};
 use bevy_console::{AddConsoleCommand, ConsoleCommand, ConsolePlugin};
 use clap::Parser;
 
@@ -17,11 +17,51 @@ impl Plugin for MachitanPlugin {
             .init_state::<ModeState>()
             .init_state::<PauseState>();
 
+        // resources
+        app.insert_resource(FramesCount { count: 0 });
+
         // plugins
         app.add_plugins((PlayerPlugin, ConsolePlugin, NotePlugin));
 
+        // systems
+        app.add_systems(Startup, (start_timer));
+        app.add_systems(Update, (update_framecount));
+
         // console comands
-        app.add_console_command::<HelpCommand, _>(help_command);
+        app.add_console_command::<EchoCommand, _>(echo_command);
+    }
+}
+
+// logical frame timer
+#[derive(Component)]
+struct FrameTime {
+    timer: Stopwatch,
+}
+
+// global framecount resource
+#[derive(Resource)]
+pub struct FramesCount {
+    count: usize,
+}
+
+fn start_timer(mut commands: Commands, time: Res<Time>) {
+    let mut timer = Stopwatch::new();
+    timer.tick(time.delta());
+    commands.spawn(FrameTime { timer });
+}
+
+fn update_framecount(
+    time: Res<Time>,
+    mut query: Query<&mut FrameTime>,
+    mut frame_count: ResMut<FramesCount>,
+) {
+    let mut frame_time = query.single_mut();
+
+    frame_time.timer.tick(time.delta());
+
+    if frame_time.timer.elapsed_secs_f64() >= 1. / 60. {
+        frame_time.timer.reset();
+        frame_count.count += 1;
     }
 }
 
@@ -29,12 +69,12 @@ impl Plugin for MachitanPlugin {
 
 #[derive(Parser, ConsoleCommand)]
 #[command(name = "echo")]
-struct HelpCommand {
+struct EchoCommand {
     msg: String,
 }
 
-fn help_command(mut log: ConsoleCommand<HelpCommand>) {
-    if let Some(Ok(HelpCommand { msg })) = log.take() {
+fn echo_command(mut log: ConsoleCommand<EchoCommand>) {
+    if let Some(Ok(EchoCommand { msg })) = log.take() {
         log.reply(msg);
     }
 }

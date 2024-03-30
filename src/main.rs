@@ -18,7 +18,8 @@ struct ViewportPlugin;
 
 impl Plugin for ViewportPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(Startup, camera_setup);
+        app.add_systems(Startup, camera_setup)
+            .add_systems(Update, field_setup);
     }
 }
 
