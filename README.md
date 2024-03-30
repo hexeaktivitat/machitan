@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/machitan.png">
+  <img src="assets/TannhauserHappy.png">
 </p>
 
 # machitan
