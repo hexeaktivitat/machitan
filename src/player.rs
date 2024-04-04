@@ -1,12 +1,18 @@
 use bevy::{input::keyboard::KeyCode, prelude::*};
 
+use crate::{
+    note::{NoteId, NoteLane, NoteTag},
+    FramesCount,
+};
+
 pub struct PlayerPlugin;
 
 impl Plugin for PlayerPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(Startup, (player_setup, ganbaru_mun))
-            .add_systems(Update, (player_input, play_mun, pause))
+            .add_systems(Update, (player_input, play_mun, lane_tap, pause))
             .add_event::<MunIdEvent>()
+            .add_event::<LaneTapEvent>()
             .add_event::<PauseEvent>();
     }
 }
@@ -52,7 +58,8 @@ fn player_setup(mut commands: Commands, server: Res<AssetServer>) {
 fn player_input(
     keys: Res<ButtonInput<KeyCode>>,
     time: Res<Time>,
-    mut ev_play_mun: EventWriter<MunIdEvent>,
+    // mut ev_play_mun: EventWriter<MunIdEvent>,
+    mut ev_lane_tap: EventWriter<LaneTapEvent>,
     mut ev_pause: EventWriter<PauseEvent>,
     mut query: Query<(&mut Transform, Entity, &Pause), With<PlayerTag>>,
 ) {
@@ -81,34 +88,34 @@ fn player_input(
                 break;
             }
             if key == &KeyCode::KeyA {
-                ev_play_mun.send(MunIdEvent(1));
+                ev_lane_tap.send(LaneTapEvent(NoteLane::LaneA));
             }
             if key == &KeyCode::KeyS {
-                ev_play_mun.send(MunIdEvent(2));
+                ev_lane_tap.send(LaneTapEvent(NoteLane::LaneS));
             }
             if key == &KeyCode::KeyD {
-                ev_play_mun.send(MunIdEvent(3));
+                ev_lane_tap.send(LaneTapEvent(NoteLane::LaneD));
             }
             if key == &KeyCode::KeyF {
-                ev_play_mun.send(MunIdEvent(4));
+                ev_lane_tap.send(LaneTapEvent(NoteLane::LaneF));
             }
             if key == &KeyCode::KeyJ {
-                ev_play_mun.send(MunIdEvent(5));
+                ev_lane_tap.send(LaneTapEvent(NoteLane::LaneJ));
             }
             if key == &KeyCode::KeyK {
-                ev_play_mun.send(MunIdEvent(6));
+                ev_lane_tap.send(LaneTapEvent(NoteLane::LaneK));
             }
             if key == &KeyCode::KeyL {
-                ev_play_mun.send(MunIdEvent(7));
+                ev_lane_tap.send(LaneTapEvent(NoteLane::LaneL));
             }
             if key == &KeyCode::Semicolon {
-                ev_play_mun.send(MunIdEvent(8));
+                ev_lane_tap.send(LaneTapEvent(NoteLane::LaneSemicolon));
             }
             if key == &KeyCode::Space {
-                ev_play_mun.send(MunIdEvent(9));
+                //                ev_lane_tap.send(LaneTapEvent(9));
             }
             if key == &KeyCode::Enter {
-                ev_play_mun.send(MunIdEvent(0));
+                //              ev_lane_tap.send(LaneTapEvent(0));
             }
             if key == &KeyCode::Backquote {
                 ev_pause.send(PauseEvent);
@@ -120,7 +127,7 @@ fn player_input(
 // player specific events
 
 #[derive(Event)]
-struct MunIdEvent(u8);
+struct MunIdEvent(NoteLane);
 
 fn play_mun(
     mut ev_play_mun: EventReader<MunIdEvent>,
@@ -129,23 +136,43 @@ fn play_mun(
 ) {
     for ev in ev_play_mun.read() {
         let mun = server.load(match ev.0 {
-            0 => "mun10.ogg",
-            1 => "mun1.ogg",
-            2 => "mun2.ogg",
-            3 => "mun3.ogg",
-            4 => "mun4.ogg",
-            5 => "mun5.ogg",
-            6 => "mun6.ogg",
-            7 => "mun7.ogg",
-            8 => "mun8.ogg",
-            9 => "mun9.ogg",
-            _ => return,
+            NoteLane::LaneA => "mun1.ogg",
+            NoteLane::LaneS => "mun2.ogg",
+            NoteLane::LaneD => "mun3.ogg",
+            NoteLane::LaneF => "mun4.ogg",
+            NoteLane::LaneJ => "mun5.ogg",
+            NoteLane::LaneK => "mun6.ogg",
+            NoteLane::LaneL => "mun7.ogg",
+            NoteLane::LaneSemicolon => "mun8.ogg",
         });
 
         commands.spawn(AudioBundle {
             source: mun,
             ..default()
         });
+    }
+}
+
+#[derive(Event)]
+struct LaneTapEvent(NoteLane);
+
+fn lane_tap(
+    mut ev_lane_tap: EventReader<LaneTapEvent>,
+    mut commands: Commands,
+    frames: Res<FramesCount>,
+    mut note_query: Query<(Entity, &NoteId), With<NoteTag>>,
+    mut ev_play_mun: EventWriter<MunIdEvent>,
+) {
+    for ev in ev_lane_tap.read() {
+        for (entity, note_id) in note_query.iter_mut() {
+            if frames.count >= note_id.timing - 10
+                && frames.count <= note_id.timing + 10
+                && ev.0 == note_id.lane
+            {
+                commands.entity(entity).despawn();
+                ev_play_mun.send(MunIdEvent(ev.0));
+            }
+        }
     }
 }
 

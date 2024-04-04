@@ -41,7 +41,7 @@ struct FrameTime {
 // global framecount resource
 #[derive(Resource)]
 pub struct FramesCount {
-    count: usize,
+    pub count: usize,
 }
 
 fn start_timer(mut commands: Commands, time: Res<Time>) {
