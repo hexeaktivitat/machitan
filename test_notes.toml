@@ -1,0 +1,7 @@
+[[notes]]
+timing = 500
+lane = "LaneL"
+
+[[notes]]
+timing = 550
+lane = "LaneSemicolon"

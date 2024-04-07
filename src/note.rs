@@ -1,4 +1,10 @@
+use std::fs::File;
+use std::io::prelude::*;
+
 use bevy::{diagnostic::FrameTimeDiagnosticsPlugin, prelude::*, render::view::PostProcessWrite};
+use bevy_console::{AddConsoleCommand, ConsoleCommand};
+use clap::Parser;
+use serde::{Deserialize, Serialize};
 
 use crate::FramesCount;
 
@@ -10,14 +16,17 @@ impl Plugin for NotePlugin {
             .add_systems(Update, (spawn_note, animate_note))
             .insert_resource(Beatmap {
                 notes: SAMPLE_BEATMAP.into(),
-            });
+            })
+            .add_console_command::<SaveCommand, _>(save_command)
+            .add_console_command::<ReloadCommand, _>(reload_command)
+            .add_console_command::<LoadCommand, _>(load_command);
     }
 }
 
 #[derive(Component)]
 pub struct NoteTag;
 
-#[derive(Component, Clone)]
+#[derive(Component, Clone, Deserialize, Serialize)]
 pub struct NoteId {
     pub timing: usize,
     pub lane: NoteLane,
@@ -38,7 +47,7 @@ const LANE_K_POS: f32 = 237.0;
 const LANE_L_POS: f32 = 381.0;
 const LANE_SEMI_POS: f32 = 525.0;
 
-#[derive(Component, Clone, PartialEq, Eq, Copy)]
+#[derive(Component, Clone, PartialEq, Eq, Copy, Serialize, Deserialize)]
 pub enum NoteLane {
     LaneA,
     LaneS,
@@ -129,14 +138,24 @@ fn spawn_note(
     }
 }
 
-fn animate_note(time: Res<Time>, mut query: Query<(&mut Transform, Entity), With<NoteTag>>) {
-    for (mut position, _entity) in query.iter_mut() {
-        let translate = 500. * time.delta_seconds();
+fn animate_note(
+    mut commands: Commands,
+    time: Res<Time>,
+    frames: Res<FramesCount>,
+    mut query: Query<(&mut Transform, Entity, &NoteId), With<NoteTag>>,
+) {
+    for (mut position, entity, note_id) in query.iter_mut() {
+        let translate = 600. * time.delta_seconds();
 
         if position.translation.y <= LANE_VERT_POS {
-            position.translation.y = LANE_VERT_POS;
+            // position.translation.y = LANE_VERT_POS;
+            position.translation.y -= translate;
         } else {
             position.translation.y -= translate;
+        }
+
+        if note_id.timing < frames.count + 10 {
+            commands.entity(entity).despawn();
         }
     }
 }
@@ -147,6 +166,7 @@ fn lane_transforms(lane: &NoteLane, y_pos: Option<f32>) -> Transform {
     } else {
         -LANE_VERT_POS
     };
+
     match lane {
         NoteLane::LaneA => Transform::from_xyz(LANE_A_POS, y, 100.),
         NoteLane::LaneS => Transform::from_xyz(LANE_S_POS, y, 100.),
@@ -159,9 +179,71 @@ fn lane_transforms(lane: &NoteLane, y_pos: Option<f32>) -> Transform {
     }
 }
 
-#[derive(Resource)]
-struct Beatmap {
-    notes: Vec<NoteId>,
+#[derive(ConsoleCommand, Parser)]
+#[command(name = "save")]
+struct SaveCommand {
+    dest: String,
+}
+
+fn save_command(mut log: ConsoleCommand<SaveCommand>, beatmap: Res<Beatmap>) {
+    if let Some(Ok(SaveCommand { dest })) = log.take() {
+        let mut file = File::create(&dest).unwrap();
+        // let toml_beatmap = toml::to_string(beatmap.as_ref()).unwrap();
+        let toml_beatmap = toml::to_string(&Beatmap {
+            notes: SAMPLE_BEATMAP.into(),
+        })
+        .unwrap();
+        file.write_all(toml_beatmap.as_bytes()).unwrap();
+        log.reply(format!("Saved current beatmap as {}", dest));
+    }
+}
+
+#[derive(ConsoleCommand, Parser)]
+#[command(name = "reload")]
+struct ReloadCommand;
+
+fn reload_command(mut log: ConsoleCommand<ReloadCommand>, mut beatmap: ResMut<Beatmap>) {
+    if let Some(Ok(ReloadCommand)) = log.take() {
+        beatmap.notes = SAMPLE_BEATMAP.into();
+        log.reply("Reloaded!");
+    }
+}
+
+#[derive(ConsoleCommand, Parser)]
+#[command(name = "load")]
+struct LoadCommand {
+    file: String,
+    song: String,
+}
+
+fn load_command(
+    mut commands: Commands,
+    mut log: ConsoleCommand<LoadCommand>,
+    mut beatmap: ResMut<Beatmap>,
+    mut frames: ResMut<FramesCount>,
+    server: Res<AssetServer>,
+) {
+    if let Some(Ok(LoadCommand { file, song })) = log.take() {
+        let mut load_file = File::open(file).unwrap();
+        let mut load_beatmap = String::new();
+        load_file.read_to_string(&mut load_beatmap).unwrap();
+        let new_beatmap: Beatmap = toml::from_str(&load_beatmap).unwrap();
+
+        let new_song: Handle<AudioSource> = server.load(song);
+
+        commands.spawn(AudioBundle {
+            source: new_song,
+            ..default()
+        });
+        beatmap.notes = new_beatmap.notes;
+        frames.count = 0;
+    }
+}
+
+#[derive(Resource, Serialize, Deserialize)]
+pub struct Beatmap {
+    // filename: String,
+    pub notes: Vec<NoteId>,
 }
 
 const SAMPLE_BEATMAP: [NoteId; 8] = [

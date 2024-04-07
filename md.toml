@@ -1,0 +1,543 @@
+[[notes]]
+timing = 193
+lane = "LaneA"
+
+[[notes]]
+timing = 241
+lane = "LaneS"
+
+[[notes]]
+timing = 292
+lane = "LaneD"
+
+[[notes]]
+timing = 344
+lane = "LaneF"
+
+[[notes]]
+timing = 394
+lane = "LaneJ"
+
+[[notes]]
+timing = 445
+lane = "LaneK"
+
+[[notes]]
+timing = 496
+lane = "LaneL"
+
+[[notes]]
+timing = 544
+lane = "LaneSemicolon"
+
+[[notes]]
+timing = 639
+lane = "LaneD"
+
+[[notes]]
+timing = 709
+lane = "LaneJ"
+
+[[notes]]
+timing = 713
+lane = "LaneK"
+
+[[notes]]
+timing = 719
+lane = "LaneL"
+
+[[notes]]
+timing = 743
+lane = "LaneS"
+
+[[notes]]
+timing = 757
+lane = "LaneD"
+
+[[notes]]
+timing = 770
+lane = "LaneA"
+
+[[notes]]
+timing = 806
+lane = "LaneS"
+
+[[notes]]
+timing = 811
+lane = "LaneD"
+
+[[notes]]
+timing = 818
+lane = "LaneF"
+
+[[notes]]
+timing = 822
+lane = "LaneJ"
+
+[[notes]]
+timing = 837
+lane = "LaneK"
+
+[[notes]]
+timing = 845
+lane = "LaneL"
+
+[[notes]]
+timing = 858
+lane = "LaneA"
+
+[[notes]]
+timing = 871
+lane = "LaneSemicolon"
+
+[[notes]]
+timing = 896
+lane = "LaneF"
+
+[[notes]]
+timing = 902
+lane = "LaneJ"
+
+[[notes]]
+timing = 909
+lane = "LaneS"
+
+[[notes]]
+timing = 910
+lane = "LaneD"
+
+[[notes]]
+timing = 915
+lane = "LaneK"
+
+[[notes]]
+timing = 924
+lane = "LaneS"
+
+[[notes]]
+timing = 924
+lane = "LaneA"
+
+[[notes]]
+timing = 929
+lane = "LaneL"
+
+[[notes]]
+timing = 943
+lane = "LaneSemicolon"
+
+[[notes]]
+timing = 950
+lane = "LaneD"
+
+[[notes]]
+timing = 974
+lane = "LaneA"
+
+[[notes]]
+timing = 978
+lane = "LaneS"
+
+[[notes]]
+timing = 990
+lane = "LaneJ"
+
+[[notes]]
+timing = 1004
+lane = "LaneK"
+
+[[notes]]
+timing = 1018
+lane = "LaneD"
+
+[[notes]]
+timing = 1031
+lane = "LaneF"
+
+[[notes]]
+timing = 1044
+lane = "LaneL"
+
+[[notes]]
+timing = 1050
+lane = "LaneS"
+
+[[notes]]
+timing = 1083
+lane = "LaneJ"
+
+[[notes]]
+timing = 1084
+lane = "LaneD"
+
+[[notes]]
+timing = 1105
+lane = "LaneD"
+
+[[notes]]
+timing = 1107
+lane = "LaneJ"
+
+[[notes]]
+timing = 1172
+lane = "LaneF"
+
+[[notes]]
+timing = 1180
+lane = "LaneK"
+
+[[notes]]
+timing = 1181
+lane = "LaneL"
+
+[[notes]]
+timing = 1198
+lane = "LaneS"
+
+[[notes]]
+timing = 1204
+lane = "LaneL"
+
+[[notes]]
+timing = 1215
+lane = "LaneD"
+
+[[notes]]
+timing = 1227
+lane = "LaneA"
+
+[[notes]]
+timing = 1284
+lane = "LaneSemicolon"
+
+[[notes]]
+timing = 1304
+lane = "LaneL"
+
+[[notes]]
+timing = 1347
+lane = "LaneF"
+
+[[notes]]
+timing = 1360
+lane = "LaneD"
+
+[[notes]]
+timing = 1371
+lane = "LaneK"
+
+[[notes]]
+timing = 1377
+lane = "LaneK"
+
+[[notes]]
+timing = 1398
+lane = "LaneL"
+
+[[notes]]
+timing = 1422
+lane = "LaneS"
+
+[[notes]]
+timing = 1446
+lane = "LaneD"
+
+[[notes]]
+timing = 1456
+lane = "LaneA"
+
+[[notes]]
+timing = 1483
+lane = "LaneF"
+
+[[notes]]
+timing = 1503
+lane = "LaneS"
+
+[[notes]]
+timing = 1532
+lane = "LaneJ"
+
+[[notes]]
+timing = 1541
+lane = "LaneK"
+
+[[notes]]
+timing = 1548
+lane = "LaneL"
+
+[[notes]]
+timing = 1556
+lane = "LaneSemicolon"
+
+[[notes]]
+timing = 1570
+lane = "LaneF"
+
+[[notes]]
+timing = 1584
+lane = "LaneD"
+
+[[notes]]
+timing = 1596
+lane = "LaneS"
+
+[[notes]]
+timing = 1607
+lane = "LaneS"
+
+[[notes]]
+timing = 1619
+lane = "LaneF"
+
+[[notes]]
+timing = 1631
+lane = "LaneJ"
+
+[[notes]]
+timing = 1644
+lane = "LaneK"
+
+[[notes]]
+timing = 1655
+lane = "LaneK"
+
+[[notes]]
+timing = 1668
+lane = "LaneS"
+
+[[notes]]
+timing = 1668
+lane = "LaneD"
+
+[[notes]]
+timing = 1675
+lane = "LaneS"
+
+[[notes]]
+timing = 1675
+lane = "LaneA"
+
+[[notes]]
+timing = 1688
+lane = "LaneF"
+
+[[notes]]
+timing = 1703
+lane = "LaneK"
+
+[[notes]]
+timing = 1715
+lane = "LaneL"
+
+[[notes]]
+timing = 1744
+lane = "LaneF"
+
+[[notes]]
+timing = 1756
+lane = "LaneD"
+
+[[notes]]
+timing = 1769
+lane = "LaneS"
+
+[[notes]]
+timing = 1776
+lane = "LaneD"
+
+[[notes]]
+timing = 1817
+lane = "LaneJ"
+
+[[notes]]
+timing = 1824
+lane = "LaneK"
+
+[[notes]]
+timing = 1832
+lane = "LaneL"
+
+[[notes]]
+timing = 1844
+lane = "LaneF"
+
+[[notes]]
+timing = 1856
+lane = "LaneD"
+
+[[notes]]
+timing = 1868
+lane = "LaneF"
+
+[[notes]]
+timing = 1882
+lane = "LaneK"
+
+[[notes]]
+timing = 1899
+lane = "LaneK"
+
+[[notes]]
+timing = 1916
+lane = "LaneK"
+
+[[notes]]
+timing = 1928
+lane = "LaneK"
+
+[[notes]]
+timing = 1952
+lane = "LaneK"
+
+[[notes]]
+timing = 1967
+lane = "LaneK"
+
+[[notes]]
+timing = 1979
+lane = "LaneK"
+
+[[notes]]
+timing = 1992
+lane = "LaneK"
+
+[[notes]]
+timing = 2006
+lane = "LaneK"
+
+[[notes]]
+timing = 2018
+lane = "LaneK"
+
+[[notes]]
+timing = 2033
+lane = "LaneK"
+
+[[notes]]
+timing = 2059
+lane = "LaneL"
+
+[[notes]]
+timing = 2077
+lane = "LaneSemicolon"
+
+[[notes]]
+timing = 2088
+lane = "LaneL"
+
+[[notes]]
+timing = 2100
+lane = "LaneK"
+
+[[notes]]
+timing = 2112
+lane = "LaneJ"
+
+[[notes]]
+timing = 2143
+lane = "LaneF"
+
+[[notes]]
+timing = 2156
+lane = "LaneF"
+
+[[notes]]
+timing = 2171
+lane = "LaneF"
+
+[[notes]]
+timing = 2185
+lane = "LaneF"
+
+[[notes]]
+timing = 2196
+lane = "LaneF"
+
+[[notes]]
+timing = 2209
+lane = "LaneF"
+
+[[notes]]
+timing = 2222
+lane = "LaneF"
+
+[[notes]]
+timing = 2235
+lane = "LaneF"
+
+[[notes]]
+timing = 2248
+lane = "LaneF"
+
+[[notes]]
+timing = 2258
+lane = "LaneF"
+
+[[notes]]
+timing = 2285
+lane = "LaneF"
+
+[[notes]]
+timing = 2297
+lane = "LaneD"
+
+[[notes]]
+timing = 2298
+lane = "LaneS"
+
+[[notes]]
+timing = 2310
+lane = "LaneS"
+
+[[notes]]
+timing = 2320
+lane = "LaneA"
+
+[[notes]]
+timing = 2333
+lane = "LaneS"
+
+[[notes]]
+timing = 2354
+lane = "LaneS"
+
+[[notes]]
+timing = 2383
+lane = "LaneJ"
+
+[[notes]]
+timing = 2404
+lane = "LaneK"
+
+[[notes]]
+timing = 2561
+lane = "LaneS"
+
+[[notes]]
+timing = 2565
+lane = "LaneA"
+
+[[notes]]
+timing = 2797
+lane = "LaneA"
+
+[[notes]]
+timing = 2802
+lane = "LaneK"
+
+[[notes]]
+timing = 2859
+lane = "LaneD"
+
+[[notes]]
+timing = 2919
+lane = "LaneS"
+
+[[notes]]
+timing = 2958
+lane = "LaneL"
+
+[[notes]]
+timing = 3421
+lane = "LaneD"

@@ -1,0 +1,47 @@
+[[notes]]
+timing = 99
+lane = "LaneF"
+
+[[notes]]
+timing = 100
+lane = "LaneJ"
+
+[[notes]]
+timing = 109
+lane = "LaneD"
+
+[[notes]]
+timing = 109
+lane = "LaneK"
+
+[[notes]]
+timing = 116
+lane = "LaneS"
+
+[[notes]]
+timing = 116
+lane = "LaneL"
+
+[[notes]]
+timing = 124
+lane = "LaneSemicolon"
+
+[[notes]]
+timing = 125
+lane = "LaneA"
+
+[[notes]]
+timing = 198
+lane = "LaneS"
+
+[[notes]]
+timing = 201
+lane = "LaneA"
+
+[[notes]]
+timing = 249
+lane = "LaneS"
+
+[[notes]]
+timing = 328
+lane = "LaneL"

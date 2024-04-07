@@ -2,9 +2,11 @@ use bevy::{prelude::*, time::Stopwatch};
 use bevy_console::{AddConsoleCommand, ConsoleCommand, ConsolePlugin};
 use clap::Parser;
 
+use editor::EditorPlugin;
 use note::NotePlugin;
-use player::PlayerPlugin;
+use player::{Pause, PlayerPlugin};
 
+mod editor;
 mod note;
 mod player;
 
@@ -21,7 +23,7 @@ impl Plugin for MachitanPlugin {
         app.insert_resource(FramesCount { count: 0 });
 
         // plugins
-        app.add_plugins((PlayerPlugin, ConsolePlugin, NotePlugin));
+        app.add_plugins((PlayerPlugin, ConsolePlugin, NotePlugin, EditorPlugin));
 
         // systems
         app.add_systems(Startup, (start_timer));

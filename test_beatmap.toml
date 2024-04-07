@@ -1,0 +1,31 @@
+[[notes]]
+timing = 200
+lane = "LaneA"
+
+[[notes]]
+timing = 250
+lane = "LaneS"
+
+[[notes]]
+timing = 300
+lane = "LaneD"
+
+[[notes]]
+timing = 350
+lane = "LaneF"
+
+[[notes]]
+timing = 400
+lane = "LaneJ"
+
+[[notes]]
+timing = 450
+lane = "LaneK"
+
+[[notes]]
+timing = 500
+lane = "LaneL"
+
+[[notes]]
+timing = 550
+lane = "LaneSemicolon"

@@ -21,8 +21,8 @@ impl Plugin for PlayerPlugin {
 struct PlayerTag;
 
 #[derive(Component)]
-struct Pause {
-    active: bool,
+pub struct Pause {
+    pub active: bool,
 }
 
 #[derive(Bundle)]
