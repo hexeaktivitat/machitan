@@ -2,22 +2,37 @@ use bevy::{prelude::*, time::Stopwatch};
 use bevy_console::{AddConsoleCommand, ConsoleCommand, ConsolePlugin};
 use clap::Parser;
 
-use editor::EditorPlugin;
-use note::NotePlugin;
-use player::{Pause, PlayerPlugin};
+use editor::{EditorPlugin, EditorSet};
+use note::{NotePlugin, NoteSet};
+use player::{Pause, PlayerPlugin, PlayerSet};
 
 mod editor;
 mod note;
 mod player;
+mod ui;
 
 pub struct MachitanPlugin;
 
 impl Plugin for MachitanPlugin {
     fn build(&self, app: &mut App) {
         // state setup
-        app.insert_state(ApplicationState::InGame)
+        app.insert_state(ApplicationState::Menu)
             .init_state::<ModeState>()
             .init_state::<PauseState>();
+
+        app.configure_sets(
+            Update,
+            (
+                PlayerSet
+                    .run_if(in_state(ApplicationState::Menu))
+                    .run_if(in_state(ApplicationState::InGame))
+                    .run_if(in_state(ApplicationState::Editor)),
+                NoteSet
+                    .run_if(in_state(ApplicationState::InGame))
+                    .run_if(in_state(PauseState::Unpaused)),
+                EditorSet.run_if(in_state(ApplicationState::Editor)),
+            ),
+        );
 
         // resources
         app.insert_resource(FramesCount { count: 0 });
@@ -62,7 +77,9 @@ fn update_framecount(
     frame_time.timer.tick(time.delta());
 
     if frame_time.timer.elapsed_secs_f64() >= 1. / 60. {
+        // let elapsed = frame_time.timer.elapsed_secs_f64();
         frame_time.timer.reset();
+        // let add_count = (elapsed % (1. / 60.)) as usize;
         frame_count.count += 1;
     }
 }
@@ -88,6 +105,7 @@ pub enum ApplicationState {
     Loading,
     Menu,
     InGame,
+    Editor,
 }
 
 #[derive(States, Debug, Default, Clone, PartialEq, Eq, Hash)]

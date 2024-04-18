@@ -12,11 +12,16 @@ use crate::{
 
 pub struct EditorPlugin;
 
+#[derive(SystemSet, Debug, Clone, PartialEq, Eq, Hash)]
+pub struct EditorSet;
+
 impl Plugin for EditorPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(Update, record_key_presses)
+        app.add_systems(Update, record_key_presses.in_set(EditorSet))
             .insert_resource(BeatmapRecord { notes: vec![] })
-            .add_console_command::<SaveRecordingCommand, _>(save_recording_command)
+            .add_console_command::<SaveRecordingCommand, _>(
+                save_recording_command.in_set(EditorSet),
+            )
             .add_console_command::<RecordCommand, _>(record_command);
     }
 }

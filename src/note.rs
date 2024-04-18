@@ -10,10 +10,13 @@ use crate::FramesCount;
 
 pub struct NotePlugin;
 
+#[derive(SystemSet, Clone, Debug, PartialEq, Eq, Hash)]
+pub struct NoteSet;
+
 impl Plugin for NotePlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(Startup, (spawn_note_frames))
-            .add_systems(Update, (spawn_note, animate_note))
+        app.add_systems(Startup, (spawn_note_frames).in_set(NoteSet))
+            .add_systems(Update, (spawn_note, animate_note).in_set(NoteSet))
             .insert_resource(Beatmap {
                 notes: SAMPLE_BEATMAP.into(),
             })
@@ -26,7 +29,7 @@ impl Plugin for NotePlugin {
 #[derive(Component)]
 pub struct NoteTag;
 
-#[derive(Component, Clone, Deserialize, Serialize)]
+#[derive(Component, Clone, Deserialize, Serialize, Debug)]
 pub struct NoteId {
     pub timing: usize,
     pub lane: NoteLane,
@@ -47,7 +50,7 @@ const LANE_K_POS: f32 = 237.0;
 const LANE_L_POS: f32 = 381.0;
 const LANE_SEMI_POS: f32 = 525.0;
 
-#[derive(Component, Clone, PartialEq, Eq, Copy, Serialize, Deserialize)]
+#[derive(Component, Clone, PartialEq, Eq, Copy, Serialize, Deserialize, Debug)]
 pub enum NoteLane {
     LaneA,
     LaneS,
@@ -117,7 +120,7 @@ fn spawn_note(
         let transform = lane_transforms(&beatmap.notes.first().unwrap().lane, None);
         match &mut *beatmap.notes {
             [head, tail @ ..] => {
-                if frames.count >= head.timing - 50 {
+                if frames.count >= head.timing - 37 {
                     let note = Note {
                         tag: NoteTag,
                         id: head.clone(),
@@ -148,13 +151,15 @@ fn animate_note(
         let translate = 600. * time.delta_seconds();
 
         if position.translation.y <= LANE_VERT_POS {
-            // position.translation.y = LANE_VERT_POS;
-            position.translation.y -= translate;
+            position.translation.y = LANE_VERT_POS;
+            println!("{}", frames.count);
+            // position.translation.y -= translate;
         } else {
             position.translation.y -= translate;
         }
 
-        if note_id.timing < frames.count + 10 {
+        if frames.count > note_id.timing + 10 {
+            // println!("despawn  at {} for {:?}", frames.count, &note_id);
             commands.entity(entity).despawn();
         }
     }

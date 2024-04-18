@@ -2,8 +2,9 @@
 name = "machitan"
 version = "0.1.0"
 edition = "2021"
+default-run = "machitan"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+ # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
 bevy = { version = "0.13.2", features = ["dynamic_linking"]}
@@ -11,6 +12,16 @@ bevy_console = "0.11.1"
 clap = "4.5.3"
 serde = { version = "1.0.197", features = ["derive"] }
 toml = "0.8.12"
+
+[[bin]]
+name = "machitan"
+
+
+[workspace]
+members = [
+  "src/*",
+]
+# resolver = "2"
 
 # small optimizations in debug builds
 [profile.dev]

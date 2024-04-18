@@ -7,10 +7,16 @@ use crate::{
 
 pub struct PlayerPlugin;
 
+#[derive(SystemSet, Debug, Clone, PartialEq, Eq, Hash)]
+pub struct PlayerSet;
+
 impl Plugin for PlayerPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(Startup, (player_setup, ganbaru_mun))
-            .add_systems(Update, (player_input, play_mun, lane_tap, pause))
+        app.add_systems(Startup, (player_setup, ganbaru_mun).in_set(PlayerSet))
+            .add_systems(
+                Update,
+                (player_input, play_mun, lane_tap, pause).in_set(PlayerSet),
+            )
             .add_event::<MunIdEvent>()
             .add_event::<LaneTapEvent>()
             .add_event::<PauseEvent>();
