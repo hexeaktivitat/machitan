@@ -16,7 +16,7 @@ pub struct NoteSet;
 impl Plugin for NotePlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(Startup, (spawn_note_frames).in_set(NoteSet))
-            .add_systems(Update, (spawn_note, animate_note).in_set(NoteSet))
+            .add_systems(FixedUpdate, (spawn_note, animate_note).in_set(NoteSet))
             .insert_resource(Beatmap {
                 notes: SAMPLE_BEATMAP.into(),
             })
@@ -90,6 +90,8 @@ const LANES: [NoteLane; 8] = [
     NoteLane::LaneSemicolon,
 ];
 
+const FRAMES_TO_TIMING: usize = 56;
+
 fn spawn_note_frames(mut commands: Commands, server: Res<AssetServer>) {
     for lane in LANES.iter() {
         let frame_sprite: Handle<Image> = server.load("note_frame.png");
@@ -120,7 +122,7 @@ fn spawn_note(
         let transform = lane_transforms(&beatmap.notes.first().unwrap().lane, None);
         match &mut *beatmap.notes {
             [head, tail @ ..] => {
-                if frames.count >= head.timing - 37 {
+                if frames.count >= head.timing - FRAMES_TO_TIMING {
                     let note = Note {
                         tag: NoteTag,
                         id: head.clone(),
@@ -159,7 +161,7 @@ fn animate_note(
         }
 
         if frames.count > note_id.timing + 10 {
-            // println!("despawn  at {} for {:?}", frames.count, &note_id);
+            println!("despawn  at {} for {:?}", frames.count, &note_id);
             commands.entity(entity).despawn();
         }
     }
@@ -207,9 +209,14 @@ fn save_command(mut log: ConsoleCommand<SaveCommand>, beatmap: Res<Beatmap>) {
 #[command(name = "reload")]
 struct ReloadCommand;
 
-fn reload_command(mut log: ConsoleCommand<ReloadCommand>, mut beatmap: ResMut<Beatmap>) {
+fn reload_command(
+    mut log: ConsoleCommand<ReloadCommand>,
+    mut beatmap: ResMut<Beatmap>,
+    mut frames: ResMut<FramesCount>,
+) {
     if let Some(Ok(ReloadCommand)) = log.take() {
         beatmap.notes = SAMPLE_BEATMAP.into();
+        frames.count = 0;
         log.reply("Reloaded!");
     }
 }

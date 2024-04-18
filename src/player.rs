@@ -2,7 +2,7 @@ use bevy::{input::keyboard::KeyCode, prelude::*};
 
 use crate::{
     note::{NoteId, NoteLane, NoteTag},
-    FramesCount,
+    FramesCount, PauseState,
 };
 
 pub struct PlayerPlugin;
@@ -12,11 +12,8 @@ pub struct PlayerSet;
 
 impl Plugin for PlayerPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(Startup, (player_setup, ganbaru_mun).in_set(PlayerSet))
-            .add_systems(
-                Update,
-                (player_input, play_mun, lane_tap, pause).in_set(PlayerSet),
-            )
+        app.add_systems(Startup, (player_setup, ganbaru_mun))
+            .add_systems(Update, (player_input, play_mun, lane_tap, pause))
             .add_event::<MunIdEvent>()
             .add_event::<LaneTapEvent>()
             .add_event::<PauseEvent>();
@@ -48,6 +45,7 @@ fn ganbaru_mun(mut commands: Commands, server: Res<AssetServer>) {
 }
 
 fn player_setup(mut commands: Commands, server: Res<AssetServer>) {
+    println!("player setup");
     let player_sprite: Handle<Image> = server.load("machitan.png");
     let player = PlayerBundle {
         tag: PlayerTag,
@@ -73,10 +71,6 @@ fn player_input(
         let translate = 250. * time.delta_seconds();
 
         for key in keys.get_pressed() {
-            if pause.active {
-                break;
-            }
-
             match key {
                 KeyCode::ArrowDown => position.translation.y -= translate,
                 KeyCode::ArrowLeft => position.translation.x -= translate,
@@ -87,12 +81,6 @@ fn player_input(
         }
 
         for key in keys.get_just_pressed() {
-            if pause.active {
-                if key == &KeyCode::Backquote {
-                    ev_pause.send(PauseEvent);
-                }
-                break;
-            }
             if key == &KeyCode::KeyA {
                 ev_lane_tap.send(LaneTapEvent(NoteLane::LaneA));
             }
@@ -118,7 +106,7 @@ fn player_input(
                 ev_lane_tap.send(LaneTapEvent(NoteLane::LaneSemicolon));
             }
             if key == &KeyCode::Space {
-                //                ev_lane_tap.send(LaneTapEvent(9));
+                ev_pause.send(PauseEvent);
             }
             if key == &KeyCode::Enter {
                 //              ev_lane_tap.send(LaneTapEvent(0));
@@ -185,11 +173,15 @@ fn lane_tap(
 #[derive(Event)]
 struct PauseEvent;
 
-fn pause(mut ev_pause: EventReader<PauseEvent>, mut query: Query<&mut Pause>) {
+fn pause(
+    mut ev_pause: EventReader<PauseEvent>,
+    state: Res<State<PauseState>>,
+    mut next_state: ResMut<NextState<PauseState>>,
+) {
     for _ev in ev_pause.read() {
-        for mut pause in query.iter_mut() {
-            // pauses and unpauses game
-            pause.active = !pause.active;
+        match state.get() {
+            PauseState::Unpaused => next_state.set(PauseState::Paused),
+            PauseState::Paused => next_state.set(PauseState::Unpaused),
         }
     }
 }

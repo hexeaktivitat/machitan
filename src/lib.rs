@@ -5,6 +5,7 @@ use clap::Parser;
 use editor::{EditorPlugin, EditorSet};
 use note::{NotePlugin, NoteSet};
 use player::{Pause, PlayerPlugin, PlayerSet};
+use ui::{UiPlugin, UiSet};
 
 mod editor;
 mod note;
@@ -21,38 +22,55 @@ impl Plugin for MachitanPlugin {
             .init_state::<PauseState>();
 
         app.configure_sets(
-            Update,
+            Startup,
             (
                 PlayerSet
                     .run_if(in_state(ApplicationState::Menu))
                     .run_if(in_state(ApplicationState::InGame))
                     .run_if(in_state(ApplicationState::Editor)),
+                UiSet.run_if(in_state(ApplicationState::Menu)),
+            ),
+        );
+        app.configure_sets(
+            Update,
+            PlayerSet
+                .run_if(in_state(ApplicationState::Menu))
+                .run_if(in_state(ApplicationState::InGame))
+                .run_if(in_state(ApplicationState::Editor)),
+        );
+        app.configure_sets(
+            FixedUpdate,
+            (
                 NoteSet
                     .run_if(in_state(ApplicationState::InGame))
                     .run_if(in_state(PauseState::Unpaused)),
                 EditorSet.run_if(in_state(ApplicationState::Editor)),
+                UiSet.run_if(in_state(ApplicationState::Menu)),
             ),
         );
 
         // resources
-        app.insert_resource(FramesCount { count: 0 });
+        app.insert_resource(FramesCount { count: 0 })
+            .insert_resource(Time::<Fixed>::from_hz(60.0));
 
         // plugins
-        app.add_plugins((PlayerPlugin, ConsolePlugin, NotePlugin, EditorPlugin));
+        app.add_plugins((
+            PlayerPlugin,
+            ConsolePlugin,
+            NotePlugin,
+            EditorPlugin,
+            UiPlugin,
+        ));
 
         // systems
-        app.add_systems(Startup, (start_timer));
-        app.add_systems(Update, (update_framecount));
+        app.add_systems(
+            FixedPreUpdate,
+            (update_framecount).run_if(in_state(ApplicationState::InGame)),
+        );
 
         // console comands
         app.add_console_command::<EchoCommand, _>(echo_command);
     }
-}
-
-// logical frame timer
-#[derive(Component)]
-struct FrameTime {
-    timer: Stopwatch,
 }
 
 // global framecount resource
@@ -61,27 +79,8 @@ pub struct FramesCount {
     pub count: usize,
 }
 
-fn start_timer(mut commands: Commands, time: Res<Time>) {
-    let mut timer = Stopwatch::new();
-    timer.tick(time.delta());
-    commands.spawn(FrameTime { timer });
-}
-
-fn update_framecount(
-    time: Res<Time>,
-    mut query: Query<&mut FrameTime>,
-    mut frame_count: ResMut<FramesCount>,
-) {
-    let mut frame_time = query.single_mut();
-
-    frame_time.timer.tick(time.delta());
-
-    if frame_time.timer.elapsed_secs_f64() >= 1. / 60. {
-        // let elapsed = frame_time.timer.elapsed_secs_f64();
-        frame_time.timer.reset();
-        // let add_count = (elapsed % (1. / 60.)) as usize;
-        frame_count.count += 1;
-    }
+fn update_framecount(time: Res<Time>, mut frame_count: ResMut<FramesCount>) {
+    frame_count.count += 1;
 }
 
 // console commands
